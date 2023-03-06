@@ -31,11 +31,12 @@ import java.util.function.ToDoubleBiFunction;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap mMap;
     String[] permissoesRequeridas = {Manifest.permission.ACCESS_FINE_LOCATION,
-                                     Manifest.permission.ACCESS_COARSE_LOCATION};
+            Manifest.permission.ACCESS_COARSE_LOCATION};
 
     public static final int APP_PERMISSOES_ID = 2023;
     TextView txtValorLatitude, txtValorLongitude;
     double latitude, longitude;
+
     ///Implementar a lógica de verificação da ativação da localização (LocationManager)
     LocationManager locationManager;
     boolean gpsAtivo = true;
@@ -57,16 +58,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 ///isProviderEnable: checa se há algum provedor disponível, pode ser wifi, pacote de dados, GPS
         gpsAtivo = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-
-        if(gpsAtivo){
+        if (gpsAtivo) {
 
             obterCoordenadas();
 
-        }else {
+        } else {
 
-
-        txtValorLatitude.setText(String.valueOf(latitude));
-        txtValorLongitude.setText(String.valueOf(longitude));
+            txtValorLatitude.setText(String.valueOf(latitude));
+            txtValorLongitude.setText(String.valueOf(longitude));
 
             Toast.makeText(this, "Coordenadas não disponiveis", Toast.LENGTH_LONG).show();
 
@@ -77,15 +76,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void obterCoordenadas() {
         boolean permissaoAtiva = solicitarPermissaoParaObterLocalizacao();
 
-        if(permissaoAtiva){
+        if (permissaoAtiva) {
             capturarUltimaLocalizacaoValida();
         }
 
     }
 
     private boolean solicitarPermissaoParaObterLocalizacao() {
-
-
 
         List<String> permissoesNegadas = new ArrayList<>();
 
@@ -95,25 +92,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             permissaoNegada = ContextCompat.checkSelfPermission(MainActivity.this, permissao);
 
-            if(permissaoNegada != PackageManager.PERMISSION_GRANTED){
+            if (permissaoNegada != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "App sem permissão de acesso ao GPS", Toast.LENGTH_LONG).show();
                 permissoesNegadas.add(permissao);
             }
 
         }
 //Se permissoesNegadas não estiver vazio...
-        if (!permissoesNegadas.isEmpty()){
+        if (!permissoesNegadas.isEmpty()) {
 
             ActivityCompat.requestPermissions(MainActivity.this,
                     permissoesNegadas.toArray(new String[permissoesNegadas.size()]), APP_PERMISSOES_ID);
 
             return false;
-        }else{
+        } else {
             return true;
         }
-       }
-
-
+    }
 
     private void capturarUltimaLocalizacaoValida() {
 
@@ -122,18 +117,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @SuppressLint("MissingPermission")
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-
-        if(location != null){
+        if (location != null) {
 
             //Geopoint
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-        } else{
+        } else {
 
             latitude = 0.00;
-            longitude = 0.00;}
-
+            longitude = 0.00;
+        }
 
 
         txtValorLatitude.setText(formatarGeopoint(latitude));
@@ -142,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "Coordenadas obtidas com sucesso", Toast.LENGTH_LONG).show();
 
     }
-    private String formatarGeopoint (double valor){
+
+    private String formatarGeopoint(double valor) {
 
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
