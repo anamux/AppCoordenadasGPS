@@ -1,5 +1,6 @@
 package com.anamuxfeldt.appcoordenadasgps;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -15,11 +16,20 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.ToDoubleBiFunction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+    GoogleMap mMap;
     String[] permissoesRequeridas = {Manifest.permission.ACCESS_FINE_LOCATION,
                                      Manifest.permission.ACCESS_COARSE_LOCATION};
 
@@ -37,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         txtValorLatitude = findViewById(R.id.txtValorLatitude);
         txtValorLongitude = findViewById(R.id.txtValorLongitude);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 // Conferir os serviços disponiveis via LocationManager
 
         locationManager = (LocationManager) getApplication().getSystemService(Context.LOCATION_SERVICE);
@@ -103,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void capturarUltimaLocalizacaoValida() {
 
+
+        // TODO: 03/03/2023 implementar o método .requestLocationUpdates() para coordenadas mais precisas.
         @SuppressLint("MissingPermission")
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -131,6 +147,17 @@ public class MainActivity extends AppCompatActivity {
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
         return decimalFormat.format(valor);
+
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng localizacaoDoCelular = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(localizacaoDoCelular).title("Celular localizado aqui!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(localizacaoDoCelular));
+
 
     }
 }

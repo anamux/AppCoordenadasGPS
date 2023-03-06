@@ -6,4 +6,6 @@
     <string name="txtLatitude">Latitude</string>
     <string name="txtLongitude">Longitude</string>
     <string name="pin_gps_do_mapa">Pin GPS do Mapa</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps2">MapsActivity2</string>
 </resources>
